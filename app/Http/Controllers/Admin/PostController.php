@@ -23,9 +23,12 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PostInterceptor $interceptor)
     {
-        return view('admin.post.index');
+        $dto = $interceptor->prepareGetUserPostDto();
+        $data['posts'] = $this->postService->listAuthorPosts($dto);
+        // dd($data);
+        return view('admin.post.index', $data);
     }
 
     /**

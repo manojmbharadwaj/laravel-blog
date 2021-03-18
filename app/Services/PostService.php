@@ -67,4 +67,15 @@ class PostService
         $dto->setErrors('Failed to create Post. Please try again.');
         return false;
     }
+
+    /**
+     * Fetch all posts of an author
+     *
+     * @param PostDto $dto
+     * @return array
+     */
+    public function listAuthorPosts(PostDto $dto): array
+    {
+        return $this->postModel->listAuthorPosts($dto->getAuthorId());
+    }
 }

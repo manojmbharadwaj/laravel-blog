@@ -41,4 +41,11 @@ class PostInterceptor
             ->setSlug(Str::slug(request('title')))
             ->setCategoryId(request('category_id'));
     }
+
+    public function prepareGetUserPostDto(): PostDto
+    {
+        return $this->postDto
+            ->setUserId()
+            ->setAuthorId();
+    }
 }

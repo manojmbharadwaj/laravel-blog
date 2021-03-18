@@ -2,6 +2,9 @@
 
 namespace App\Interfaces;
 
+/**
+ * All DTO must implement the DtoInterface. Dto should have error, messages getter, setter method.
+ */
 interface DtoInterface
 {
 

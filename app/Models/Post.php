@@ -39,4 +39,28 @@ class Post extends Model
 
         return false;
     }
+
+    /**
+     * List all posts of an author
+     *
+     * @param integer $authorId
+     * @return array
+     */
+    public function listAuthorPosts(int $authorId): array
+    {
+        $posts = [];
+        try {
+            $posts =  \DB::table('posts as p')
+                ->join('categories as c', 'p.category_id', 'c.id')
+                ->select('p.id as postId', 'p.title', 'p.slug', 'c.name as category')
+                ->where('p.author_id', $authorId)
+                ->orderBy('p.id', 'DESC')
+                ->get()
+                ->toArray();
+        } catch (\Exception $ex) {
+            le('', $ex, ['author' => $authorId]);
+        }
+
+        return $posts;
+    }
 }
