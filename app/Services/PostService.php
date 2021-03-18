@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Dto\CategoryDto;
+use App\Dto\PostDto;
 use App\Models\Category;
+use App\Models\Post;
 
 class PostService
 {
@@ -11,13 +13,21 @@ class PostService
     /**
      * Category Model
      *
-     * @var App\Model
+     * @var App\Model\Category
      */
     private $categoryModel;
 
-    public function __construct(Category $category)
+    /**
+     * Post Model
+     *
+     * @var App\Model\Post
+     */
+    private $postModel;
+
+    public function __construct(Category $category, Post $post)
     {
         $this->categoryModel = $category;
+        $this->postModel = $post;
     }
 
     /**
@@ -36,6 +46,25 @@ class PostService
         }
 
         $dto->setErrors('Failed to create Category. Please try again.');
+        return false;
+    }
+
+    /**
+     * Save new post
+     *
+     * @param PostDto $dto
+     * @return boolean
+     */
+    public function createNewPost(PostDto $dto): bool
+    {
+        $res = $this->postModel->addPost($dto);
+
+        if ($res) {
+            $dto->setMessages('Post created successfully.');
+            return true;
+        }
+
+        $dto->setErrors('Failed to create Post. Please try again.');
         return false;
     }
 }

@@ -3,10 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Interceptors\PostInterceptor;
+use App\Models\Category;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    private $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.post.index');
     }
 
     /**
@@ -24,18 +35,26 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.post.create');
+        $data['categories'] = Category::where('archive', false)
+            ->select('id', 'name', 'slug')
+            ->orderBy('name')
+            ->get();
+        return view('admin.post.create', $data);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostInterceptor $interceptor)
     {
-        //
+        $dto = $interceptor->prepareStorePostDto();
+        $res = $this->postService->createNewPost($dto);
+
+        if (!empty($dto->getErrors())) {
+            return back()->withInput()->with('msg', $dto->listErrors($dto))->with('type', 'warning');
+        }
+
+        return redirect()->route('post.index')->with('msg', $dto->listMessages($dto))->with('type', 'success');
     }
 
     /**

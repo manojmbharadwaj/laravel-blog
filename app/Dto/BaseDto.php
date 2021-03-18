@@ -39,10 +39,8 @@ class BaseDto implements DtoInterface
     }
 
     /**
-     * Set user ID
-     *
-     * @param  int  $userId  User ID
-     *
+     * Set user ID of the Logged in User
+     * 
      * @return  self
      */
     public function setUserId(): self

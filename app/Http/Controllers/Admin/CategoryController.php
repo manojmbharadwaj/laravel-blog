@@ -40,10 +40,10 @@ class CategoryController extends Controller
      * @param PostService $post
      * @return void
      */
-    public function store(CategoryInterceptor $interceptor, PostService $post)
+    public function store(CategoryInterceptor $interceptor, PostService $postService)
     {
         $dto = $interceptor->prepareStoreCategoryDto();
-        $post->createCategory($dto);
+        $postService->createCategory($dto);
 
         if (!empty($dto->getErrors())) {
             return back()->withInput()->with('msg', $dto->listErrors($dto))->with('type', 'warning');
